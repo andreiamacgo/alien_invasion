@@ -119,6 +119,7 @@ def check_aliens_bottom(ai_settings, stats, screen, ship, aliens, bullets):
     for alien in aliens.sprites():
         if alien.rect.bottom >= screen_rect.bottom:
             ship_hit(ai_settings, stats, screen, ship, aliens, bullets)
+            print("Um alien atingiu o fundo da tela")
             break
 
 def update_aliens(ai_settings, stats, screen, ship, aliens, bullets):
@@ -135,16 +136,18 @@ def update_aliens(ai_settings, stats, screen, ship, aliens, bullets):
 
 def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
     """Responde a espaçonave sendo tingida por um alien"""
-    # Diminui ships_left.
-    stats.ships_left -= 1
+    if stats.ships_left > 0:
+        # Diminui ships_left.
+        stats.ships_left -= 1
+        # esvazia a lista de aliens e tiros
+        aliens.empty()
+        bullets.empty()
 
-    # esvazia a lista de aliens e tiros
-    aliens.empty()
-    bullets.empty()
+        #cria nova frota e contraliza a espaçonave
+        create_fleet(ai_settings, screen, ship, aliens)
+        ship.center_ship()
 
-    #cria nova frota e contraliza a espaçonave
-    create_fleet(ai_settings, screen, ship, aliens)
-    ship.center_ship()
-
-    # Pause
-    sleep(0.5)
+        # Pause
+        sleep(0.5)
+    else:
+        stats.game_active = False
