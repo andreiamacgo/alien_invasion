@@ -1,4 +1,5 @@
 import sys
+from time import sleep
 import pygame
 from bullet import Bullet
 from alien import Alien
@@ -112,7 +113,28 @@ def change_fleet_direction(ai_settings, aliens):
         alien.rect.y += ai_settings.fleet_drop_speed
     ai_settings.fleet_direction *= -1
 
-def update_aliens(ai_settings, aliens):
+def update_aliens(ai_settings, stats, screen, ship, aliens, bullets):
     """Checa se a frota está na borda, e então atualiza a posição de todos os aliens na frota"""
     check_fleet_edges(ai_settings, aliens)
     aliens.update()
+
+    #procura por colisões entre alien e espaçonave
+    if pygame.sprite.spritecollideany(ship, aliens):
+        print("Espaçonave atingida")
+        ship_hit(ai_settings, stats, screen, ship, aliens, bullets)
+
+def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
+    """Responde a espaçonave sendo tingida por um alien"""
+    # Diminui ships_left.
+    stats.ships_left -= 1
+
+    # esvazia a lista de aliens e tiros
+    aliens.empty()
+    bullets.empty()
+
+    #cria nova frota e contraliza a espaçonave
+    create_fleet(ai_settings, screen, ship, aliens)
+    ship.center_ship()
+
+    # Pause
+    sleep(0.5)
