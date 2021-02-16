@@ -45,7 +45,13 @@ def update_screen(ai_settings, screen, ship, aliens,  bullets):
     # faz a tela mais recente visível
     pygame.display.flip()
 
-def update_bullets(bullets):
+
+def check_bullet_alien_collision(ai_settings, screen, ship, aliens, bullets):
+    """Responde à colisão de aliens com os tiros"""
+    # Remove qualquer tiro e alien que tenha coliido
+    collisions = pygame.sprite.groupcollide(bullets, aliens, False, True)
+
+def update_bullets(ai_settings, screen, ship, aliens, bullets):
     """Atualiza a posição dos projéteis e some com os projéteis antigos"""
     # Atualiza a posição do projétil
     bullets.update()
@@ -53,6 +59,12 @@ def update_bullets(bullets):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
              bullets.remove(bullet)
+    check_bullet_alien_collision(ai_settings,screen,ship,aliens,bullets)
+
+    if len(aliens) == 0:
+        # Destroi projéteis existentes e ria nova frota
+        bullets.empty()
+        create_fleet(ai_settings, screen, ship, aliens)
 
 def get_number_aliens_x(ai_settings, alien_width):
     available_space_x = ai_settings.screen_width - 2 * alien_width
