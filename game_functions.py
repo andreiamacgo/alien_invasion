@@ -86,3 +86,21 @@ def create_fleet(ai_settings, screen, ship, aliens):
     for row_number in range(number_rows):
         for alien_number in range(number_aliens_x):
             create_alien(ai_settings, screen, aliens, alien_number, row_number)
+
+def check_fleet_edges(ai_settings, aliens):
+    """Responde apropriadamente se algun alienúgena alcançar a borda da tela"""
+    for alien in aliens.sprites():
+        if alien.check_edges():
+            change_fleet_direction(ai_settings, aliens)
+            break
+
+def change_fleet_direction(ai_settings, aliens):
+    """Descarta a tropa inteira e modifica a direção da tropo"""
+    for alien in aliens.sprites():
+        alien.rect.y += ai_settings.fleet_drop_speed
+    ai_settings.fleet_direction *= -1
+
+def update_aliens(ai_settings, aliens):
+    """Checa se a frota está na borda, e então atualiza a posição de todos os aliens na frota"""
+    check_fleet_edges(ai_settings, aliens)
+    aliens.update()
