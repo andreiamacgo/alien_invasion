@@ -50,7 +50,7 @@ def update_screen(ai_settings, screen, ship, aliens,  bullets):
 def check_bullet_alien_collision(ai_settings, screen, ship, aliens, bullets):
     """Responde à colisão de aliens com os tiros"""
     # Remove qualquer tiro e alien que tenha coliido
-    collisions = pygame.sprite.groupcollide(bullets, aliens, False, True)
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 
 def update_bullets(ai_settings, screen, ship, aliens, bullets):
     """Atualiza a posição dos projéteis e some com os projéteis antigos"""
@@ -74,7 +74,7 @@ def get_number_aliens_x(ai_settings, alien_width):
 
 def get_number_rows(ai_settings, ship_height, alien_height):
     """Determina o número de linhas de aliens que preenche a tela"""
-    available_space_y = (ai_settings.screen_height - (3 * alien_height) - ship_height)
+    available_space_y = (ai_settings.screen_height - (6 * alien_height) - ship_height)
     number_rows = int(available_space_y / (2 * alien_height))
     return number_rows
 
@@ -113,10 +113,20 @@ def change_fleet_direction(ai_settings, aliens):
         alien.rect.y += ai_settings.fleet_drop_speed
     ai_settings.fleet_direction *= -1
 
+def check_aliens_bottom(ai_settings, stats, screen, ship, aliens, bullets):
+    """Checa se algum alien alcançou o fundo da tela"""
+    screen_rect = screen.get_rect()
+    for alien in aliens.sprites():
+        if alien.rect.bottom >= screen_rect.bottom:
+            ship_hit(ai_settings, stats, screen, ship, aliens, bullets)
+            break
+
 def update_aliens(ai_settings, stats, screen, ship, aliens, bullets):
     """Checa se a frota está na borda, e então atualiza a posição de todos os aliens na frota"""
     check_fleet_edges(ai_settings, aliens)
     aliens.update()
+    # produra por aliens atingindo o fundo da tela
+    check_aliens_bottom(ai_settings, stats, screen, ship, aliens, bullets)
 
     #procura por colisões entre alien e espaçonave
     if pygame.sprite.spritecollideany(ship, aliens):
