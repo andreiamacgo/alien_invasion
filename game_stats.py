@@ -5,6 +5,9 @@ class GameStats():
         self.ai_settings = ai_settings
         self.reset_stats()
 
+        # Inicia o jogo em um estado inativo
+        self.game_active = False
+
     def reset_stats(self):
         """inicializa estatisticas que podem mudar durante o jogo"""
         self.ships_left = self.ai_settings.ship_limit

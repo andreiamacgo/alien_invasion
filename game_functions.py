@@ -5,7 +5,7 @@ from bullet import Bullet
 from alien import Alien
 
 def fire_bullet(ai_settings, screen, ship, bullets):
-    """Dispara um projétil se o limite ainda não for atingjido"""
+    """Dispara um tiro se o limite de tiros ainda não for atingjido"""
     if len(bullets) < ai_settings.bullets_allowed:
         new_bullet = Bullet(ai_settings, screen, ship)
         bullets.add(new_bullet)
@@ -27,7 +27,7 @@ def check_keyup_events(event, ship):
     elif event.key == pygame.K_LEFT:
         ship.moving_left = False
 
-def check_event(ai_settings, screen, ship, bullets):
+def check_event(ai_settings, screen, stats, play_button, ship, bullets):
     """ Responde aos eventos de pressionamento de teclas e mouse"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -36,13 +36,25 @@ def check_event(ai_settings, screen, ship, bullets):
             check_keydown_events(event, ai_settings, screen, ship, bullets)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            check_play_button(stats, play_button, mouse_x, mouse_y)
 
-def update_screen(ai_settings, screen, ship, aliens,  bullets):
+def check_play_button(stats, play_button, mouse_x, mouse_y):
+    """Inicia um novo jogo quando o clicar em jogar"""
+    if play_button.rect.collidepoint(mouse_x, mouse_y):
+        stats.game_active = True
+def update_screen(ai_settings, screen, stats, ship, aliens,  bullets, play_button):
     screen.fill(ai_settings.bg_collor)
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     ship.blitme()
     aliens.draw(screen)
+
+    # Desenha o botão de play se o jogo estiver ativo
+    if not stats.game_active:
+        play_button.draw_button()
+
     # faz a tela mais recente visível
     pygame.display.flip()
 
