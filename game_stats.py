@@ -15,6 +15,7 @@ class GameStats():
         """inicializa estatisticas que podem mudar durante o jogo"""
         self.ships_left = self.ai_settings.ship_limit
         self.score = 0
+        self.level = 1
 
         # Inicia Invasão Alienígena em um estado ativo
         self.game_active = True

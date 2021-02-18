@@ -31,7 +31,7 @@ def check_keyup_events(event, ship):
         ship.moving_left = False
 
 
-def check_event(ai_settings, screen, stats, play_button, ship, aliens, bullets):
+def check_event(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets):
     """ Responde aos eventos de pressionamento de teclas e mouse"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -42,10 +42,10 @@ def check_event(ai_settings, screen, stats, play_button, ship, aliens, bullets):
             check_keyup_events(event, ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_play_button(ai_settings, screen, stats, play_button, ship, aliens, bullets, mouse_x, mouse_y)
+            check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets, mouse_x, mouse_y)
 
 
-def check_play_button(ai_settings, screen, stats, play_button, ship, aliens, bullets, mouse_x, mouse_y):
+def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets, mouse_x, mouse_y):
     """Inicia um novo jogo quando clicar em jogar"""
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked and not stats.game_active:
@@ -56,6 +56,11 @@ def check_play_button(ai_settings, screen, stats, play_button, ship, aliens, bul
         # Redefine as estatísticas do jogo
         stats.reset_stats()
         stats.game_active = True
+
+        #Redefine as imagens do placar
+        sb.prep_score()
+        sb.prep_high_score()
+        sb.prep_level()
 
         # Esvazia a lista de aliens e tiros
         aliens.empty()
@@ -88,7 +93,7 @@ def update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets, play_bu
 
 def check_bullet_alien_collision(ai_settings, screen, stats, sb, ship, aliens, bullets):
     """Responde à colisão de aliens com os tiros"""
-    # Remove qualquer tiro e alien que tenha coliido
+    # Remove qualquer tiro e alien que tenha colidido
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
     if collisions:
         for aliens in collisions.values():
@@ -108,9 +113,14 @@ def update_bullets(ai_settings, screen, stats, sb, ship, aliens, bullets):
     check_bullet_alien_collision(ai_settings, screen, stats, sb, ship, aliens, bullets)
 
     if len(aliens) == 0:
-        # Destroi projéteis existentes e ria nova frota
+        # Se uma frota inteira for destruída, inicia um novo level
         bullets.empty()
         ai_settings.increase_speed()
+
+        #Aumenta o level
+        stats.level += 1
+        sb.prep_level()
+
         create_fleet(ai_settings, screen, ship, aliens)
 
 
