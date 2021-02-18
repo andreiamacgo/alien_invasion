@@ -61,6 +61,7 @@ def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens,
         sb.prep_score()
         sb.prep_high_score()
         sb.prep_level()
+        sb.prep_ships()
 
         # Esvazia a lista de aliens e tiros
         aliens.empty()
@@ -176,34 +177,38 @@ def change_fleet_direction(ai_settings, aliens):
     ai_settings.fleet_direction *= -1
 
 
-def check_aliens_bottom(ai_settings, stats, screen, ship, aliens, bullets):
+def check_aliens_bottom(ai_settings, stats, screen, sb, ship, aliens, bullets):
     """Checa se algum alien alcançou o fundo da tela"""
     screen_rect = screen.get_rect()
     for alien in aliens.sprites():
         if alien.rect.bottom >= screen_rect.bottom:
-            ship_hit(ai_settings, stats, screen, ship, aliens, bullets)
+            ship_hit(ai_settings, stats, screen, sb, ship, aliens, bullets)
             print("Um alien atingiu o fundo da tela")
             break
 
 
-def update_aliens(ai_settings, stats, screen, ship, aliens, bullets):
+def update_aliens(ai_settings, stats, screen, sb, ship, aliens, bullets):
     """Checa se a frota está na borda, e então atualiza a posição de todos os aliens na frota"""
     check_fleet_edges(ai_settings, aliens)
     aliens.update()
     # produra por aliens atingindo o fundo da tela
-    check_aliens_bottom(ai_settings, stats, screen, ship, aliens, bullets)
+    check_aliens_bottom(ai_settings, stats, screen, sb, ship, aliens, bullets)
 
     # procura por colisões entre alien e espaçonave
     if pygame.sprite.spritecollideany(ship, aliens):
         print("Espaçonave atingida")
-        ship_hit(ai_settings, stats, screen, ship, aliens, bullets)
+        ship_hit(ai_settings, stats, screen, sb, ship, aliens, bullets)
 
 
-def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
+def ship_hit(ai_settings, stats, screen, sb, ship, aliens, bullets):
     """Responde à espaçonave sendo atingida por um alien"""
     if stats.ships_left > 1:
         # Diminui ships_left.
         stats.ships_left -= 1
+
+        # Atualiza o placar
+        sb.prep_ships()
+
         # esvazia a lista de aliens e tiros
         aliens.empty()
         bullets.empty()
