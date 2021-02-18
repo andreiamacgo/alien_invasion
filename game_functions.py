@@ -94,6 +94,7 @@ def check_bullet_alien_collision(ai_settings, screen, stats, sb, ship, aliens, b
         for aliens in collisions.values():
             stats.score += ai_settings.alien_points * len(aliens)
             sb.prep_score()
+        check_high_score(stats, sb)
 
 
 def update_bullets(ai_settings, screen, stats, sb, ship, aliens, bullets):
@@ -207,3 +208,9 @@ def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
         stats.game_active = False
         pygame.mouse.set_visible(True)
         print("\n******** Game Over ********\nFim do jogo, você perdeu!")
+
+def check_high_score(stats, sb):
+    """Checa se existe um novo recorde de Pontos"""
+    if stats.score > stats.high_score:
+        stats.high_score = stats.score
+        sb.prep_high_score()

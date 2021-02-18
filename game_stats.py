@@ -8,6 +8,9 @@ class GameStats():
         # Inicia o jogo em um estado inativo
         self.game_active = False
 
+        # Recorde de pontos -  nunca deve er redefinido
+        self.high_score = 0
+
     def reset_stats(self):
         """inicializa estatisticas que podem mudar durante o jogo"""
         self.ships_left = self.ai_settings.ship_limit
