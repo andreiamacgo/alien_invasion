@@ -4,6 +4,8 @@
 
 # Alien Invasion
 
+## Introdução 
+
 Este projeto consiste em um jogo arcade desenvolvido  a partir do livro "Python Crash Course", 
 com o intuito de desenvolver habilidades em programação em Python.
 
@@ -17,12 +19,13 @@ a movimentação da frota fica mais rápida. O jogador perde uma nave quando um 
 da tela ou quando um alien toca a nave. Se o jogador perder três naves o jogo termina.
 
 ## Requisitos
+
 - [Python](https://www.python.org/) 3.x +
 - [Pygame](https://www.pygame.org/)
 
 ## Como Jogar
 
-### Clonar este repositório utilizando os comandos abaixo:
+Clonar este repositório utilizando os comandos abaixo:
 
 ```
 $ git clone https://github.com/bryanlds/Alien-Invasion.git
@@ -30,8 +33,17 @@ $ git clone https://github.com/bryanlds/Alien-Invasion.git
 $ cd Alien-Invasion
 ```
 
-### Para rodar o jogo use o comando a seguir:
+Para rodar o jogo use o comando a seguir:
 
 ```
 $ python alien_invasion.py
 ``` 
+
+Comandos de jogo
+
+```
+Atirar: barra de espaço
+Mover a nave: setas esquer/direita
+Sair do jogo: tecla Q ou botão de sair
+``` 
+
